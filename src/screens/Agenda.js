@@ -4,6 +4,7 @@ import moment from 'moment'
 import 'moment/locale/pt-br'
 import todayImage from '../../assets/imgs/today.jpg'
 import commonStyles from '../commonStyles'
+
 import Task from '../components/Task'
 
 export default class Agenda extends Component {
@@ -18,9 +19,12 @@ export default class Agenda extends Component {
                         </Text>
                     </View>
                 </ImageBackground>
+
+
                 <View style={styles.tasksContainer}>
-                    <Task desc='Curso de react native' estimaded={new Date()} doneat={null}/>
+                    <Task desc='Curso de react native terminado' estimaded={new Date()} doneat={new Date()} />
                 </View>
+           
             </View>
         )
     }
@@ -33,26 +37,26 @@ const styles = StyleSheet.create({
     background: {
         flex: 3,
     },
-    titleBar : {
-        flex :1 ,
+    titleBar: {
+        flex: 1,
         justifyContent: 'flex-end',
     },
-    title : {
-        fontFamily : commonStyles.fontFamily,
-        color : commonStyles.colors.secondary,
+    title: {
+        fontFamily: commonStyles.fontFamily,
+        color: commonStyles.colors.secondary,
         fontSize: 50,
         marginLeft: 20,
         marginBottom: 10,
     },
-    subtitle :{
-        fontFamily : commonStyles.fontFamily,
-        color : commonStyles.colors.secondary,
-        fontSize : 20,
-        marginLeft : 20,
-        marginBottom : 30
+    subtitle: {
+        fontFamily: commonStyles.fontFamily,
+        color: commonStyles.colors.secondary,
+        fontSize: 20,
+        marginLeft: 20,
+        marginBottom: 30
     },
-    tasksContainer : {
-        flex : 7,
-        
+    tasksContainer: {
+        flex: 7,
+
     }
 })
