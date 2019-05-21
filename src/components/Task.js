@@ -8,18 +8,19 @@ import commonStyles from '../commonStyles';
 
 
 export default (props) => {
-    let check = null 
-    let descStyle = {}
-    if (props.doneAt != null ) {
-        alert("vim aqui")
+    let check = null
+    let descStyle = null
+
+    if (props.doneAt !== null) {
+
         check = (
             <View style={styles.done}>
                 <Icon name='check' size={20} color={commonStyles.colors.secondary} />
             </View>
         )
-        descStyle = { textDecoration: 'line-through' }
+        descStyle = { textDecorationLine: 'line-through' }
     } else {
-        alert("vim no else")
+
         check = (<View style={styles.pendding} />)
     }
 
@@ -28,12 +29,12 @@ export default (props) => {
             <View style={styles.checkContainer}>
                 {check}
             </View>
-            <View style={[styles.description, descStyle]}>
-                <Text > {props.desc} </Text>
+            <View>
+                <Text style={[styles.description, descStyle]} > {props.desc} </Text>
+                <Text style={styles.date}>
+                    {moment(props.estimateAt).locale('pt-br').format('ddd, D [de] MMMM')}
+                </Text>
             </View>
-            <Text style={styles.date}>
-                {moment(props.estimateAt).locale('pt-br').format('ddd, D [de] MMMM')}
-            </Text>
         </View>
     )
 }

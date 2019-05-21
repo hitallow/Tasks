@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ImageBackground, Text } from 'react-native'
+import { View, StyleSheet, ImageBackground, Text, FlatList } from 'react-native'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import todayImage from '../../assets/imgs/today.jpg'
@@ -8,6 +8,18 @@ import commonStyles from '../commonStyles'
 import Task from '../components/Task'
 
 export default class Agenda extends Component {
+
+    state = {
+        tasks: [
+            {
+                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: null
+            },
+            
+        ]
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -19,12 +31,11 @@ export default class Agenda extends Component {
                         </Text>
                     </View>
                 </ImageBackground>
-
-
                 <View style={styles.tasksContainer}>
-                    <Task desc='Curso de react native terminado' estimaded={new Date()} doneat={new Date()} />
+                    <FlatList data={this.state.tasks}
+                        keyExtractor={i => `${i.id}`}
+                        renderItem={({ item }) => <Task {...item} />} />
                 </View>
-           
             </View>
         )
     }
