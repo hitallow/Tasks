@@ -15,11 +15,22 @@ export default class Agenda extends Component {
                 id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
             },
             {
-                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: null
+                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
             },
             
         ]
     }
+
+    toggleTask = (id)=>{
+        const tasks = this.state.tasks.map( task =>{
+            if(id === task.id){
+                task.doneAt = task.doneAt === null ? new Date() : null
+            }
+            return task
+        })
+        this.setState({tasks})
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -34,7 +45,7 @@ export default class Agenda extends Component {
                 <View style={styles.tasksContainer}>
                     <FlatList data={this.state.tasks}
                         keyExtractor={i => `${i.id}`}
-                        renderItem={({ item }) => <Task {...item} />} />
+                        renderItem={({ item }) => <Task {...item} onSelectTask={this.toggleTask} />} />
                 </View>
             </View>
         )
