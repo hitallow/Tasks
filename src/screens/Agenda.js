@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity, Platform } from 'react-native'
 import moment from 'moment'
 import 'moment/locale/pt-br'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import todayImage from '../../assets/imgs/today.jpg'
 import commonStyles from '../commonStyles'
 
 import Task from '../components/Task'
-import { platform } from 'os';
+
 
 export default class Agenda extends Component {
 
@@ -18,10 +19,28 @@ export default class Agenda extends Component {
             {
                 id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
             },
+            {
+                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
+            },
 
         ],
-        showDoneAtTask: false,
-        visibleTask =[]
+        showDoneAtTask: true,
+        visibleTask: [],
     }
 
     toggleTask = (id) => {
@@ -35,16 +54,17 @@ export default class Agenda extends Component {
     }
 
     toggleFilter = () => {
-        this.setState({ showDoneAtTask: !this.state.showDoneAtTask }, this.filterTask())
+        
+        this.setState({ showDoneAtTask: !this.state.showDoneAtTask }, this.filterTask)
     }
 
     filterTask = () => {
-        const visibleTask = null
+        let visibleTask = null
         if (this.state.showDoneAtTask) {
             visibleTask = this.state.tasks
         } else {
             visibleTask = this.state.tasks.filter(task => {
-                if (task.doneAt !== null) {
+                if (task.doneAt === null) {
                     return task
                 }
             })
@@ -113,10 +133,10 @@ const styles = StyleSheet.create({
         flex: 7,
 
     },
-    iconBar :{
-        marginTop : platform.OS === 'ios'? 30 : 10,
+    iconBar: {
+        marginTop: Platform.OS === 'ios' ? 30 : 10,
         marginHorizontal: 20,
         flexDirection: 'row',
-        justifyContent : 'flex-end'
+        justifyContent: 'flex-end'
     }
 })
