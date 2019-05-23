@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity, Platform } from 'react-native'
+import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity, Platform, AsyncStorage } from 'react-native'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -15,38 +15,13 @@ import AddTask from './AddTask'
 export default class Agenda extends Component {
 
     state = {
-        tasks: [
-            {
-                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Projeto de reac-native', doneAt: new Date(), estimateAt: new Date()
-            },
-            {
-                id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
-            },
-        ],
+        tasks: [],
         showDoneAtTask: true,
         visibleTask: [],
         showAddTask: false
     }
     saveTask = (task) => {
-        
+
         const tasks = [...this.state.tasks]
 
         tasks.push({
@@ -85,24 +60,26 @@ export default class Agenda extends Component {
                     return task
                 }
             })
-
         }
         this.setState({ visibleTask })
+        AsyncStorage.setItem('tasks', JSON.stringify(this.state.tasks))
 
     }
     // ciclo de vida do react, primeiro método que é executado quando o componente é montado
-    componentDidMount = () => {
-        this.filterTask()
+    componentDidMount = async () => {
+        const data = await AsyncStorage.getItem('tasks')
+        const tasks = JSON.parse(data) || []
+        this.setState({ tasks }, this.filterTask)
     }
 
-    deleteTask = (id)=>{
+    deleteTask = (id) => {
         // const tasks = this.state.tasks.map( task => {
         //     if(task.id!==id)
         //         return task
         // }) 
 
-        const tasks = this.state.tasks.filter( t => t.id !== id)
-        this.setState({tasks}, this.filterTask)
+        const tasks = this.state.tasks.filter(t => t.id !== id)
+        this.setState({ tasks }, this.filterTask)
     }
 
     render() {
@@ -110,7 +87,7 @@ export default class Agenda extends Component {
             <View style={styles.container}>
                 <AddTask isVisible={this.state.showAddTask}
                     onSave={this.saveTask}
-                    onCancel={ () => this.setState({showAddTask: false}) } />
+                    onCancel={() => this.setState({ showAddTask: false })} />
                 <ImageBackground source={todayImage} style={styles.background}>
                     <View style={styles.iconBar}>
                         <TouchableOpacity onPress={this.toggleFilter} >
