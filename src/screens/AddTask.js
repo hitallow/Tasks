@@ -14,6 +14,9 @@ import {
 } from 'react-native'
 import commomStyles from '../commonStyles'
 
+import moment from 'moment'
+import 'moment/locale/pt-br'
+
 //import moment from 'moment'
 
 
@@ -36,7 +39,32 @@ export default class AddTask extends Component {
         this.setState({ ...initialState })
     }
 
+    handleDataAndroidChanged = () => {
+        DatePickerAndroid.open({
+            date: this.state.date
+        }).then(e => {
+            if (e.action !== DatePickerAndroid.dismissedAction) {
+                const date = moment(this.state.date)
+                date.date(e.day)
+                date.month(e.month)
+                date.year(e.year)
+                this.setState({ date: date.toDate() })
+            }
+        })
+    }
+
     render() {
+        let dataPicker
+        if (Platform.OS === 'ios') {
+            dataPicker = <DatePickerIOS value={this.state.date} onDateChange={(date) => this.setState({ date })} />
+        } else {
+            dataPicker = (
+                <TouchableOpacity  onPress={this.handleDataAndroidChanged}>
+                    <Text style={styles.date}> {moment(this.state.date).locale('pt-br').format('ddd,D [de] MMMM [de] YYYY')}</Text>
+                </TouchableOpacity>
+            )
+        }
+
         return (
             <Modal onRequestClose={this.props.onCancel} visible={this.props.isVisible}
                 animationType='slide' transparent={true}>
@@ -50,7 +78,9 @@ export default class AddTask extends Component {
                     </Text>
                     <TextInput style={styles.button} value={this.state.desc} onChangeText={(desc) => this.setState({ desc })}
                         placeholder='Descrição da atividade' />
-                    <DatePickerIOS value={this.state.date} onDateChange={(date) => this.setState({ date })} />
+
+                    {dataPicker}
+
                     <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
                         <TouchableOpacity onPress={this.props.onCancel}>
                             <Text style={styles.button}> Cancelar </Text>
@@ -104,5 +134,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#e3e3e3',
         borderRadius: 6,
+    },
+    date :{
+        fontFamily : commomStyles.fontFamily,
+        textAlign : 'center',
+        fontSize: 20,
+        marginLeft : 10,
+        marginTop : 10
     }
 })
