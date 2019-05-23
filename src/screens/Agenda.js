@@ -8,6 +8,9 @@ import commonStyles from '../commonStyles'
 
 import Task from '../components/Task'
 
+import ActionButton from 'react-native-action-button'
+import AddTask from './AddTask'
+
 
 export default class Agenda extends Component {
 
@@ -37,12 +40,25 @@ export default class Agenda extends Component {
             {
                 id: Math.random(), desc: 'Concluir curso', doneAt: null, estimateAt: new Date()
             },
-
         ],
         showDoneAtTask: true,
         visibleTask: [],
+        showAddTask: false
     }
+    saveTask = (task) => {
 
+        const tasks = [...this.state.tasks]
+
+        tasks.push({
+            id: Math.random(),
+            desc: task.desc,
+            estimateAt: task.date,
+            doneAt: null
+        })
+        this.setState({ tasks, showAddTask: false }, this.filterTask)
+
+
+    }
     toggleTask = (id) => {
         const tasks = this.state.tasks.map(task => {
             if (id === task.id) {
@@ -53,11 +69,12 @@ export default class Agenda extends Component {
         this.setState({ tasks }, this.filterTask())
     }
 
+    // altera o filtro para ver atividades fechadas
     toggleFilter = () => {
-        
         this.setState({ showDoneAtTask: !this.state.showDoneAtTask }, this.filterTask)
     }
 
+    // busca todo as atividades dependendo do estado
     filterTask = () => {
         let visibleTask = null
         if (this.state.showDoneAtTask) {
@@ -73,6 +90,7 @@ export default class Agenda extends Component {
         this.setState({ visibleTask })
 
     }
+    // ciclo de vida do react, primeiro método que é executado quando o componente é montado
     componentDidMount = () => {
         this.filterTask()
     }
@@ -80,6 +98,9 @@ export default class Agenda extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <AddTask isVisible={this.state.showAddTask}
+                    onSave={this.AddTask}
+                    onCancel={() => {this.setState({ showAddTask: false })}} />
                 <ImageBackground source={todayImage} style={styles.background}>
                     <View style={styles.iconBar}>
                         <TouchableOpacity onPress={this.toggleFilter} >
@@ -99,6 +120,7 @@ export default class Agenda extends Component {
                         keyExtractor={i => `${i.id}`}
                         renderItem={({ item }) => <Task {...item} onSelectTask={this.toggleTask} />} />
                 </View>
+                <ActionButton onPress={() => this.setState({ showAddTask: true })} />
             </View>
         )
     }
