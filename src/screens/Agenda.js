@@ -95,6 +95,16 @@ export default class Agenda extends Component {
         this.filterTask()
     }
 
+    deleteTask = (id)=>{
+        // const tasks = this.state.tasks.map( task => {
+        //     if(task.id!==id)
+        //         return task
+        // }) 
+
+        const tasks = this.state.tasks.filter( t => t.id !== id)
+        this.setState({tasks}, this.filterTask)
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -118,7 +128,7 @@ export default class Agenda extends Component {
                 <View style={styles.tasksContainer}>
                     <FlatList data={this.state.visibleTask}
                         keyExtractor={i => `${i.id}`}
-                        renderItem={({ item }) => <Task {...item} onSelectTask={this.toggleTask} />} />
+                        renderItem={({ item }) => <Task onDelet={this.deleteTask} {...item} onSelectTask={this.toggleTask} />} />
                 </View>
                 <ActionButton onPress={() => this.setState({ showAddTask: true })} />
             </View>
