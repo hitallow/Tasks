@@ -8,7 +8,9 @@ import {
     DatePickerIOS,
     TouchableWithoutFeedback,
     TouchableOpacity,
-    Alert
+    Alert,
+    DatePickerAndroid,
+    Platform
 } from 'react-native'
 import commomStyles from '../commonStyles'
 
@@ -36,31 +38,31 @@ export default class AddTask extends Component {
 
     render() {
         return (
-            <Modal onRequestClose={this.props.OnCancel} visible={this.props.isVisible}
+            <Modal onRequestClose={this.props.onCancel} visible={this.props.isVisible}
                 animationType='slide' transparent={true}>
-                <TouchableWithoutFeedback onPress={this.props.OnCancel} >
+                <TouchableWithoutFeedback onPress={this.props.onCancel} >
                     <View style={styles.offset} />
                 </TouchableWithoutFeedback>
 
                 <View style={styles.container} >
                     <Text style={styles.header}>
                         Nova Tarefa!
-            </Text>
+                    </Text>
                     <TextInput style={styles.button} value={this.state.desc} onChangeText={(desc) => this.setState({ desc })}
                         placeholder='Descrição da atividade' />
                     <DatePickerIOS value={this.state.date} onDateChange={(date) => this.setState({ date })} />
                     <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={this.props.OnCancel}>
+                        <TouchableOpacity onPress={this.props.onCancel}>
                             <Text style={styles.button}> Cancelar </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.onSave}>
+                        <TouchableOpacity onPress={this.save}>
                             <Text style={styles.button}> Salvar </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
 
-                <TouchableWithoutFeedback onPress={this.props.OnCancel} >
+                <TouchableWithoutFeedback onPress={this.props.onCancel} >
                     <View style={styles.offset} />
                 </TouchableWithoutFeedback>
 

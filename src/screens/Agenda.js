@@ -46,7 +46,7 @@ export default class Agenda extends Component {
         showAddTask: false
     }
     saveTask = (task) => {
-
+        
         const tasks = [...this.state.tasks]
 
         tasks.push({
@@ -56,9 +56,9 @@ export default class Agenda extends Component {
             doneAt: null
         })
         this.setState({ tasks, showAddTask: false }, this.filterTask)
-
-
     }
+
+    // altera o estado da atividade
     toggleTask = (id) => {
         const tasks = this.state.tasks.map(task => {
             if (id === task.id) {
@@ -100,7 +100,7 @@ export default class Agenda extends Component {
             <View style={styles.container}>
                 <AddTask isVisible={this.state.showAddTask}
                     onSave={this.AddTask}
-                    onCancel={() => {this.setState({ showAddTask: false })}} />
+                    onCancel={ () => this.setState({showAddTask: false}) } />
                 <ImageBackground source={todayImage} style={styles.background}>
                     <View style={styles.iconBar}>
                         <TouchableOpacity onPress={this.toggleFilter} >
