@@ -22,12 +22,19 @@ import 'moment/locale/pt-br'
 
 
 
-initialState = {
-    desc: '',
-    date: new Date()
-}
 export default class AddTask extends Component {
-    state = { ...initialState }
+    constructor(props) {
+        super(props)
+        this.state = this.getInitialState()
+    }
+
+
+    getInitialState = () => {
+        return {
+            desc: '',
+            date: new Date()
+        }
+    }
 
     save = () => {
         if (!this.state.desc.trim()) {
@@ -36,7 +43,7 @@ export default class AddTask extends Component {
         }
         const data = { ...this.state }
         this.props.onSave(data)
-        this.setState({ ...initialState })
+        this.setState({ ...this.getInitialState() })
     }
 
     handleDataAndroidChanged = () => {
@@ -59,7 +66,7 @@ export default class AddTask extends Component {
             dataPicker = <DatePickerIOS value={this.state.date} onDateChange={(date) => this.setState({ date })} />
         } else {
             dataPicker = (
-                <TouchableOpacity  onPress={this.handleDataAndroidChanged}>
+                <TouchableOpacity onPress={this.handleDataAndroidChanged}>
                     <Text style={styles.date}> {moment(this.state.date).locale('pt-br').format('ddd,D [de] MMMM [de] YYYY')}</Text>
                 </TouchableOpacity>
             )
@@ -67,7 +74,7 @@ export default class AddTask extends Component {
 
         return (
             <Modal onRequestClose={this.props.onCancel} visible={this.props.isVisible}
-                animationType='slide' transparent={true}>
+                animationType='slide' transparent={true} onShow={()=> this.setState({...this.getInitialState})}>
                 <TouchableWithoutFeedback onPress={this.props.onCancel} >
                     <View style={styles.offset} />
                 </TouchableWithoutFeedback>
@@ -135,11 +142,11 @@ const styles = StyleSheet.create({
         borderColor: '#e3e3e3',
         borderRadius: 6,
     },
-    date :{
-        fontFamily : commomStyles.fontFamily,
-        textAlign : 'center',
+    date: {
+        fontFamily: commomStyles.fontFamily,
+        textAlign: 'center',
         fontSize: 20,
-        marginLeft : 10,
-        marginTop : 10
+        marginLeft: 10,
+        marginTop: 10
     }
 })

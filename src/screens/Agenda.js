@@ -20,6 +20,8 @@ export default class Agenda extends Component {
         visibleTask: [],
         showAddTask: false
     }
+
+    // salva uma nova atividade 
     saveTask = (task) => {
 
         const tasks = [...this.state.tasks]
