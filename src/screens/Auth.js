@@ -4,6 +4,8 @@ import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, TextInput, A
 
 import backgroundImg from '../../assets/imgs/login.jpg'
 
+import AuthInput from '../components/AuthInput'
+
 import commonStyles from '../commonStyles'
 
 
@@ -36,15 +38,15 @@ export default class Auth extends Component {
                 <Text style={styles.title}>Tasks</Text>
                 <View style={styles.formContainer}>
                     <Text>{this.state.stageNew ? 'Informe seus dados' : 'Crie sua conta'}</Text>
-                    {this.state.stageNew && <TextInput style={styles.input} placeholder='Nome' value={this.state.name}
+                    {this.state.stageNew && <AuthInput secureTextEntry={false} icon='user' style={styles.input} placeholder='Nome' value={this.state.name}
                         onChangeText={(name) => { this.setState({ name }) }} />}
-                    <TextInput placeholder='E-mail'
+                    <AuthInput icon='at' placeholder='E-mail' secureTextEntry={false}
                         style={styles.input} value={this.state.email} onChangeText={(email) => this.setState({ email })} />
-                    <TextInput placeholder='Senha'
+                    <AuthInput icon='lock' secureTextEntry={true} placeholder='Senha'
                         style={styles.input} value={this.state.password} onChangeText={(password) => this.setState({ password })} />
-                    {this.state.stageNew && <TextInput style={styles.input} placeholder='Confirme sua senha' value={this.state.confirmPassword}
+                    {this.state.stageNew && <AuthInput style={styles.input} placeholder='Confirme sua senha' value={this.state.confirmPassword}
                         onChangeText={(confirmPassword) => this.setState({ confirmPassword })} />}
-                    <TouchableOpacity onPress={this.signinOrSignup}>
+                    <TouchableOpacity icon='asterisk' secureTextEntry={true} onPress={this.signinOrSignup}>
                         <View style={styles.button}>
                             <Text styles={styles.buttonText}>{this.state.stageNew ? 'Registrar' : 'Login'}</Text>
                         </View>
