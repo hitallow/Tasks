@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, TextInput, Alert } from 'react-native'
-
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, Alert } from 'react-native'
 import backgroundImg from '../../assets/imgs/login.jpg'
-
 import AuthInput from '../components/AuthInput'
-
 import commonStyles from '../commonStyles'
-
+import axios from 'axios'
+import {showError, server} from '../common'
 
 export default class Auth extends Component {
 
@@ -18,17 +15,30 @@ export default class Auth extends Component {
         name: '',
         confirmPassword: ''
     }
-    signinOrSignup = () => {
+    signinOrSignup = async () => {
         if (this.state.stageNew) {
-            Alert.alert("Você está fazendo login",
-                `Nome: ${this.state.name} 
-                Email : ${this.state.email} 
-                Senha : ${this.state.password} 
-                confirmação : ${this.state.confirmPassword}`)
+            try{
+                await axios.post(`${server}/signup`,{
+                    name: this.state.name,
+                    email: this.state.email,
+                    password: this.state.password
+                })
+                Alert.alert("Sucesso",`${this.state.name} foi cadastrado!`)
+                this.setState({stageNew : false})
+            }catch(err){
+                showError(err)
+            }
         } else {
-            Alert.alert("Você está para se cadastrar",
-                `Email : ${this.state.email}
-                Senha : ${this.state.password}`)
+            try{
+                const res = await axios.post(`${server}/signin`,{
+                    email: this.state.email,
+                    password : this.state.password
+                })
+                axios.defaults.headers.common['Authorization'] = `bearer ${res.data.token}`
+                this.props.navigation.navigate('Home')
+            }catch(err){
+                showError(err)
+            }
         }
     }
 

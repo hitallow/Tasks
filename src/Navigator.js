@@ -9,8 +9,8 @@ const mainRoutes = {
         name: 'Auth',
         screen:  Auth
     },
-    Agenda: {
-        name: 'Agenda',
+    Home: {
+        name: 'Home',
         screen:  Agenda
     }
 }
