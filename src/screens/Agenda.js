@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity, Platform, AsyncStorage } from 'react-native'
+import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity, Platform } from 'react-native'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import todayImage from '../../assets/imgs/today.jpg'
 import commonStyles from '../commonStyles'
-
+import axios from 'axios'
+import { server, showError } from '../common'
 import Task from '../components/Task'
 
 import ActionButton from 'react-native-action-button'
@@ -22,28 +23,39 @@ export default class Agenda extends Component {
     }
 
     // salva uma nova atividade 
-    saveTask = (task) => {
+    saveTask = async (task) => {
+        
+        try {
+            await axios.post(`${server}/tasks`, {
+                desc: task.desc,
+                estimateAt: task.date
+            })
+            this.setState({ showAddTask: false }, this.loadTasks)
 
-        const tasks = [...this.state.tasks]
+        } catch (e) {
+            showError(e)
+        }
 
-        tasks.push({
-            id: Math.random(),
-            desc: task.desc,
-            estimateAt: task.date,
-            doneAt: null
-        })
-        this.setState({ tasks, showAddTask: false }, this.filterTask)
+    }
+    loadTasks = async () => {
+        try {
+            const dateMax = moment().format('YYYY-MM-DD 23:59')
+            const res = await axios.get(`${server}/tasks?date=${dateMax}`)
+            this.setState({ tasks: res.data }, this.filterTask)
+        } catch (e) {
+            showError(e)
+        }
     }
 
     // altera o estado da atividade
-    toggleTask = (id) => {
-        const tasks = this.state.tasks.map(task => {
-            if (id === task.id) {
-                task.doneAt = task.doneAt === null ? new Date() : null
-            }
-            return task
-        })
-        this.setState({ tasks }, this.filterTask())
+    toggleTask = async (id) => {
+        try {
+            await axios.put(`${server}/tasks/${id}/toggle`)
+            this.loadTasks()
+        } catch (e) {
+            showError(e)
+        }
+
     }
 
     // altera o filtro para ver atividades fechadas
@@ -64,24 +76,29 @@ export default class Agenda extends Component {
             })
         }
         this.setState({ visibleTask })
-        AsyncStorage.setItem('tasks', JSON.stringify(this.state.tasks))
+        //AsyncStorage.setItem('tasks', JSON.stringify(this.state.tasks))
 
     }
     // ciclo de vida do react, primeiro método que é executado quando o componente é montado
     componentDidMount = async () => {
-        const data = await AsyncStorage.getItem('tasks')
-        const tasks = JSON.parse(data) || []
-        this.setState({ tasks }, this.filterTask)
+        this.loadTasks()
     }
 
-    deleteTask = (id) => {
+    deleteTask = async (id) => {
         // const tasks = this.state.tasks.map( task => {
         //     if(task.id!==id)
         //         return task
         // }) 
 
-        const tasks = this.state.tasks.filter(t => t.id !== id)
-        this.setState({ tasks }, this.filterTask)
+        // const tasks = this.state.tasks.filter(t => t.id !== id)
+        // this.setState({ tasks }, this.filterTask)
+
+        try {
+            await axios.delete(`${server}/tasks/${id}`)
+            await this.loadTasks()
+        } catch (e) {
+            showError(e)
+        }
     }
 
     render() {
