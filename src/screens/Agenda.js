@@ -92,7 +92,6 @@ export default class Agenda extends Component {
 
         // const tasks = this.state.tasks.filter(t => t.id !== id)
         // this.setState({ tasks }, this.filterTask)
-
         try {
             await axios.delete(`${server}/tasks/${id}`)
             await this.loadTasks()
