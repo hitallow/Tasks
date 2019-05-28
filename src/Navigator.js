@@ -45,13 +45,14 @@ const MenuConfig = {
         labelStyle: {
             fontFamily: commonStyles.fontFamily,
             fontWeight: 'normal',
-            fontSize: 20,
+            fontSize: 20
         },
         activeLabelStyle: {
-            color: '#080'
+            color: '#080',
         }
     }
 }
+
 
 const MenuNavigator = createDrawerNavigator(MenuRoutes, MenuConfig)
 
