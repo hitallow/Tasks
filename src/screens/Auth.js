@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, Alert } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, Alert, AsyncStorage } from 'react-native'
 import backgroundImg from '../../assets/imgs/login.jpg'
 import AuthInput from '../components/AuthInput'
 import commonStyles from '../commonStyles'
@@ -23,7 +23,8 @@ export default class Auth extends Component {
                 password: this.state.password
             })
             axios.defaults.headers.common['Authorization'] = `bearer ${res.data.token}`
-            this.props.navigation.navigate('Home')
+            AsyncStorage.setItem('userData',JSON.stringify(res.data))
+            this.props.navigation.navigate('Home', res.data)
         } catch (err) {
             showError(err)
         }
@@ -33,7 +34,7 @@ export default class Auth extends Component {
         try {
             await axios.post(`${server}/signup`, {
                 name: this.state.name,
-                email: this.state.email,
+                email: this.state.email.toLowerCase(),
                 password: this.state.password
             })
             Alert.alert("Sucesso", `${this.state.name} foi cadastrado!`)

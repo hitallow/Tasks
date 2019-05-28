@@ -3,9 +3,10 @@ import React from 'react'
 import { createSwitchNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation'
 
 import Agenda from './screens/Agenda'
-
+import AuthOrApp from './screens/AuthOrApp'
 import Auth from './screens/Auth'
 import commonStyles from './commonStyles'
+import Menu from './screens/Menu'
 
 
 const MenuRoutes = {
@@ -40,6 +41,7 @@ const MenuRoutes = {
 }
 const MenuConfig = {
     initialRouteName: 'Today',
+    contentComponent: Menu,
     contentOptions: {
         labelStyle: {
             fontFamily: commonStyles.fontFamily,
@@ -57,6 +59,10 @@ const MenuNavigator = createDrawerNavigator(MenuRoutes, MenuConfig)
 
 
 const mainRoutes = {
+    Loading: {
+        name: 'AuthOrApp',
+        screen: AuthOrApp
+    },
     Auth: {
         name: 'Auth',
         screen: Auth
@@ -68,7 +74,7 @@ const mainRoutes = {
 }
 
 
-const MainNavigator = createSwitchNavigator(mainRoutes, { initialRouteName: 'Auth' })
+const MainNavigator = createSwitchNavigator(mainRoutes, { initialRouteName: 'Loading' })
 const navigator = createAppContainer(MainNavigator)
 
 export default navigator
