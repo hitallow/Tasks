@@ -11,28 +11,28 @@ import commonStyles from './commonStyles'
 const MenuRoutes = {
     Today: {
         name: 'Today',
-        screen: (props) => <Agenda title="Hoje" dayAhead={0} {...props} />,
+        screen: (props) => <Agenda title="Hoje" daysAhead={0} {...props} />,
         navigationOptions: {
             title: 'Hoje'
         },
     },
     Tomorrow: {
         name: 'Tomorrow',
-        screen: (props) => <Agenda title='Amanhã' dayAhead={1} {...props} />,
+        screen: (props) => <Agenda title='Amanhã' daysAhead={1} {...props} />,
         navigationOptions: {
             title: 'Amanhã'
         },
     },
     Week: {
         name: 'Week',
-        screen: (props) => <Agenda title='Semana' dayAhead={7} {...props} />,
+        screen: (props) => <Agenda title='Semana' daysAhead={7} {...props} />,
         navigationOptions: {
             title: 'Semana'
         }
     },
     Moth: {
         name: 'Moth',
-        screen: (props) => <Agenda title='Mês' dayAhead={30} {...props} />,
+        screen: (props) => <Agenda title='Mês' daysAhead={30} {...props} />,
         navigationOptions: {
             title: 'Mês'
         }
@@ -40,7 +40,6 @@ const MenuRoutes = {
 }
 const MenuConfig = {
     initialRouteName: 'Today',
-    
     contentOptions: {
         labelStyle: {
             fontFamily: commonStyles.fontFamily,

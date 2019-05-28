@@ -3,12 +3,15 @@ import { View, StyleSheet, ImageBackground, Text, FlatList, TouchableOpacity, Pl
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import todayImage from '../../assets/imgs/today.jpg'
 import commonStyles from '../commonStyles'
 import axios from 'axios'
 import { server, showError } from '../common'
 import Task from '../components/Task'
 
+import todayImage from '../../assets/imgs/today.jpg'
+import tomorrowImage from '../../assets/imgs/tomorrow.jpg'
+import weekImage from '../../assets/imgs/week.jpg'
+import monthImage from '../../assets/imgs/month.jpg'
 import ActionButton from 'react-native-action-button'
 import AddTask from './AddTask'
 
@@ -39,8 +42,10 @@ export default class Agenda extends Component {
     }
     loadTasks = async () => {
         try {
-            const dateMax = moment().format('YYYY-MM-DD 23:59')
-            const res = await axios.get(`${server}/tasks?date=${dateMax}`)
+            const maxDate = moment()
+                .add({ days: this.props.daysAhead })
+                .format('YYYY-MM-DD 23:59')
+            const res = await axios.get(`${server}/tasks?date=${maxDate}`)
             this.setState({ tasks: res.data }, this.filterTask)
         } catch (e) {
             showError(e)
@@ -101,20 +106,44 @@ export default class Agenda extends Component {
     }
 
     render() {
+        let color = null
+        let image = null
+        switch(this.props.dayAhead){
+            case 0:
+                color = commonStyles.colors.today
+                image = todayImage
+                break
+            case 1:
+                color = commonStyles.colors.tomorrow
+                image = tomorrowImage
+                break
+            case 7:
+                color = commonStyles.colors.week
+                image = weekImage
+                break
+            default:
+                color = commonStyles.colors.month
+                image = monthImage
+        }
+
+
         return (
             <View style={styles.container}>
                 <AddTask isVisible={this.state.showAddTask}
                     onSave={this.saveTask}
                     onCancel={() => this.setState({ showAddTask: false })} />
-                <ImageBackground source={todayImage} style={styles.background}>
+                <ImageBackground source={image} style={styles.background}>
                     <View style={styles.iconBar}>
+                        <TouchableOpacity onPress={()=> this.props.navigation.openDrawer()}>
+                            <Icon name='bars' size={20} color={commonStyles.colors.secondary}/>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={this.toggleFilter} >
                             <Icon name={this.state.showDoneAtTask ? 'eye' : 'eye-slash'}
                                 size={20} color={commonStyles.colors.secondary} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.titleBar}>
-                        <Text style={styles.title}>Hoje</Text>
+                        <Text style={styles.title}>{this.props.title}</Text>
                         <Text style={styles.subtitle}>
                             {moment().locale('pt-br').format('ddd,D [de] MMMM [de] YYYY')}
                         </Text>
@@ -125,7 +154,7 @@ export default class Agenda extends Component {
                         keyExtractor={i => `${i.id}`}
                         renderItem={({ item }) => <Task onDelet={this.deleteTask} {...item} onSelectTask={this.toggleTask} />} />
                 </View>
-                <ActionButton onPress={() => this.setState({ showAddTask: true })} />
+                <ActionButton buttonColor={color} onPress={() => this.setState({ showAddTask: true })} />
             </View>
         )
     }
@@ -164,6 +193,6 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? 30 : 10,
         marginHorizontal: 20,
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'space-between'
     }
 })
