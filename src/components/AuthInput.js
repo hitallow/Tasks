@@ -5,11 +5,11 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default props => {
     return (
-        <View style={[styles.container , props.style]}>
-            <Icon name={props.icon} size={20} style={styles.icon}/>
-            <TextInput secureTextEntry {...props} style={styles.input}/>
+        <View style={[styles.container, props.style]}>
+            <Icon name={props.icon} size={20} style={styles.icon} />
+            <TextInput secureTextEntry {...props} style={styles.input} />
         </View>
-        )
+    )
 }
 
 
@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 
     },
-    icon:{
+    icon: {
         color: '#333',
         marginLeft: 20,
     },
-    input:{
+    input: {
         marginLeft: 20,
-        width : '70%'
+        width: '70%'
     },
 
 })
